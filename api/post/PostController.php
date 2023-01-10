@@ -133,18 +133,22 @@ class PostController
         return $newResponse;
     }
 
-    // public function delete($id)
-    // {
-    //     $this->post->id = isset($id) ? $id : die();
+    public function delete($id)
+    {
+        $this->post->id = isset($this->args['id']) ? $this->args['id'] : die();
 
-    //     if ($this->post->delete()) {
-    //         echo json_encode(
-    //             array('message' => 'Post Deleted')
-    //         );
-    //     } else {
-    //         echo json_encode(
-    //             array('message' => 'Post Not Deleted')
-    //         );
-    //     }
-    // }
+        if ($this->post->delete()) {
+            $newResponseData = json_encode(
+                array('message' => "Post With id {$this->post->id} Deleted")
+            );
+            $status = 200;   
+        } else {
+            $newResponseData = json_encode(
+                array('message' => "Post With id {$this->post->id} Not Deleted")
+            );
+            $status = 400;
+        }
+        $newResponse = $this->response->withJson($newResponseData, $status);
+        return $newResponse;
+    }
 }

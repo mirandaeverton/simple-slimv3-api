@@ -33,9 +33,9 @@ $app->put('/post/{id}', function (Request $request, Response $response, $args) {
     return $postController->update();
 });
 
-// $app->delete('/post/:id', function ($id) use ($app) {
-//     $postController = new PostController($app);
-//     $postController->delete($id);
-// });
+$app->delete('/post/{id}', function (Request $request, Response $response, $args) {
+    $postController = new PostController($request, $response, $args);
+    return $postController->delete($id);
+});
 
 $app->run();
