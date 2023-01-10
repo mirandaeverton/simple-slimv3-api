@@ -11,8 +11,11 @@ class Post{
     public $author;
     public $created_at;
 
-    public function __construct($db) {
-        $this->conn = $db;
+    public function __construct() {
+        include_once "config\Database.php";
+        
+        $database = new Database();
+        $this->conn = $database->connect();
     }
 
     public function read() {
