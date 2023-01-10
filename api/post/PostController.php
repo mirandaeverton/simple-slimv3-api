@@ -41,10 +41,12 @@ class PostController
                 array_push($posts_arr['data'], $post_item);
             }
             $data = json_encode($posts_arr);
+            $status = 200;
         } else {
-            $data = json_encode(array('message' => 'No Posts Found'), 404);
+            $data = json_encode(array('message' => 'No Posts Found'));
+            $status = 404;
         }
-        $newResponse = $this->response->withJson($data);
+        $newResponse = $this->response->withJson($data, $status);
         return $newResponse;
     }
 
@@ -74,10 +76,12 @@ class PostController
                 array_push($posts_arr['data'], $post_item);
             }
             $data = json_encode($posts_arr);
+            $status = 200;
         } else {
             $data = json_encode(array('message' => "Post With id {$this->post->id} Not Found"));
+            $status = 404;
         }
-        $newResponse = $this->response->withJson($data);
+        $newResponse = $this->response->withJson($data, $status);
         return $newResponse;
     }
 
@@ -94,35 +98,40 @@ class PostController
             $data = json_encode(
                 array('message' => 'Post Created')
             );
+            $status = 201;
         } else {
             $data = json_encode(
                 array('message' => 'Post Not Created')
             );
+            $status = 400;
         }
-        $newResponse = $this->response->withJson($data);
+        $newResponse = $this->response->withJson($data, $status);
         return $newResponse;
     }
 
-    // public function update($id)
-    // {
-    //     $data = json_decode(file_get_contents("php://input"));
+    public function update()
+    {
+        $responseData = $this->request->getParsedBody();
+        $this->post->id = isset($this->args['id']) ? $this->args['id'] : die();
+        $this->post->title = $responseData['title'];
+        $this->post->body = $responseData['body'];
+        $this->post->author = $responseData['author'];
+        $this->post->category_id = $responseData['category_id'];
 
-    //     $this->post->id = isset($id) ? $id : die();
-    //     $this->post->title = $data->title;
-    //     $this->post->body = $data->body;
-    //     $this->post->author = $data->author;
-    //     $this->post->category_id = $data->category_id;
-
-    //     if ($this->post->update()) {
-    //         echo json_encode(
-    //             array('message' => 'Post Updated')
-    //         );
-    //     } else {
-    //         echo json_encode(
-    //             array('message' => 'Post Not Updated')
-    //         );
-    //     }
-    // }
+        if ($this->post->update()) {
+            $newResponseData = json_encode(
+                array('message' => "Post With id {$this->post->id} Updated")
+            );
+            $status = 200;
+        } else {
+            $newResponseData = json_encode(
+                array('message' => "Post With id {$this->post->id} Not Updated")
+            );
+            $status = 400;
+        }
+        $newResponse = $this->response->withJson($newResponseData, $status);
+        return $newResponse;
+    }
 
     // public function delete($id)
     // {

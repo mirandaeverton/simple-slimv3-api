@@ -28,10 +28,10 @@ $app->post('/post', function (Request $request, Response $response) {
     return $postController->create();
 });
 
-// $app->put('/post/:id', function ($id) use ($app) {
-//     $postController = new PostController($app);
-//     $postController->update($id);
-// });
+$app->put('/post/{id}', function (Request $request, Response $response, $args) {
+    $postController = new PostController($request, $response, $args);
+    return $postController->update();
+});
 
 // $app->delete('/post/:id', function ($id) use ($app) {
 //     $postController = new PostController($app);
