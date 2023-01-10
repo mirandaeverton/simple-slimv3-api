@@ -81,26 +81,27 @@ class PostController
         return $newResponse;
     }
 
-    // public function create()
-    // {
-    //     header('Content-type: application/json');
-    //     $data = json_decode(file_get_contents("php://input"));
+    public function create()
+    {
+        $data = $this->request->getParsedBody();
+        
+        $this->post->title = $data['title'];
+        $this->post->body = $data['body'];
+        $this->post->author = $data['author'];
+        $this->post->category_id = $data['category_id'];
 
-    //     $this->post->title = $data->title;
-    //     $this->post->body = $data->body;
-    //     $this->post->author = $data->author;
-    //     $this->post->category_id = $data->category_id;
-
-    //     if ($this->post->create()) {
-    //         echo json_encode(
-    //             array('message' => 'Post Created')
-    //         );
-    //     } else {
-    //         echo json_encode(
-    //             array('message' => 'Post Not Created')
-    //         );
-    //     }
-    // }
+        if ($this->post->create()) {
+            $data = json_encode(
+                array('message' => 'Post Created')
+            );
+        } else {
+            $data = json_encode(
+                array('message' => 'Post Not Created')
+            );
+        }
+        $newResponse = $this->response->withJson($data);
+        return $newResponse;
+    }
 
     // public function update($id)
     // {

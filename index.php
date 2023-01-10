@@ -17,15 +17,16 @@ $app->get('/post', function (Request $request, Response $response) {
     return $postController->getAll();
 });
 
+// In Slim v3 the args passed in the URI are not designed by ":" but placed inside {}
 $app->get('/post/{id}', function (Request $request, Response $response, $args) {
     $postController = new PostController($request, $response, $args);
     return $postController->getSingle();
 });
 
-// $app->post('/post', function () use ($app) {
-//     $postController = new PostController($app);
-//     $postController->create();
-// });
+$app->post('/post', function (Request $request, Response $response) {
+    $postController = new PostController($request, $response);
+    return $postController->create();
+});
 
 // $app->put('/post/:id', function ($id) use ($app) {
 //     $postController = new PostController($app);
