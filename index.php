@@ -13,9 +13,8 @@ $app = new \Slim\App;
 // ROUTES
 
 $app->get('/post', function (ServerRequestInterface $request, ResponseInterface $response) {
-    echo $request->getMethod();
-    // $postController = new PostController($app);
-    // $postController->getAll();
+    $postController = new PostController($request, $response);
+    return $postController->getAll();
 });
 
 // $app->get('/post/:id', function ($id) use ($app) {
