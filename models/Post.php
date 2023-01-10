@@ -102,6 +102,7 @@ class Post{
     }
 
     public function update() {
+
         $query = 'UPDATE ' . $this->table . '
             SET
                 title = :title,
@@ -125,6 +126,8 @@ class Post{
         $stmt->bindParam(':author', $this->author);
         $stmt->bindParam(':category_id', $this->category_id);
 
+        if(!$this->checkIfPostExists()) return false;
+
         if($stmt->execute()){
             return true;
         }
@@ -136,15 +139,19 @@ class Post{
     }
 
     public function delete() {
-        $query = 'DELETE FROM ' . $this->table . '
-                  WHERE
-                    id = :id';
 
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        
+        $query = 'DELETE FROM ' . $this->table . '
+        WHERE
+        id = :id';
+        
         $stmt = $this->conn->prepare($query);
         
-        $this->id = htmlspecialchars(strip_tags($this->id));
-
+        
         $stmt->bindParam(':id', $this->id);
+        
+        if(!$this->checkIfPostExists()) return false;
 
         if($stmt->execute()){
             return true;
@@ -154,4 +161,22 @@ class Post{
 
         return false;
     }
+
+    private function checkIfPostExists() {
+
+        $query = 'SELECT id FROM ' . $this->table . '
+                    WHERE id = :id';
+        $stmt = $this->conn->prepare($query);
+
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+        if($stmt->rowCount() > 0){
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
