@@ -5,22 +5,22 @@ require './vendor/autoload.php';
 set_include_path("C:\MAMP\htdocs\simple-php-api");
 include_once "api\\post\\PostController.php";
 
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 $app = new \Slim\App;
 
 // ROUTES
 
-$app->get('/post', function (ServerRequestInterface $request, ResponseInterface $response) {
+$app->get('/post', function (Request $request, Response $response) {
     $postController = new PostController($request, $response);
     return $postController->getAll();
 });
 
-// $app->get('/post/:id', function ($id) use ($app) {
-//     $postController = new PostController($app);
-//     $postController->getSingle($id);
-// });
+$app->get('/post/{id}', function (Request $request, Response $response, $args) {
+    $postController = new PostController($request, $response, $args);
+    return $postController->getSingle();
+});
 
 // $app->post('/post', function () use ($app) {
 //     $postController = new PostController($app);
